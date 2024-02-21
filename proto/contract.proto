@@ -1,0 +1,210 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package contract.v1;
+
+message Events {
+    repeated BackUnbacked back_unbackeds = 1;
+    repeated Borrow borrows = 2;
+    repeated FlashLoan flash_loans = 3;
+    repeated IsolationModeTotalDebtUpdated isolation_mode_total_debt_updateds = 4;
+    repeated LiquidationCall liquidation_calls = 5;
+    repeated MintUnbacked mint_unbackeds = 6;
+    repeated MintedToTreasury minted_to_treasuries = 7;
+    repeated RebalanceStableBorrowRate rebalance_stable_borrow_rates = 8;
+    repeated Repay repays = 9;
+    repeated ReserveDataUpdated reserve_data_updateds = 10;
+    repeated ReserveUsedAsCollateralDisabled reserve_used_as_collateral_disableds = 11;
+    repeated ReserveUsedAsCollateralEnabled reserve_used_as_collateral_enableds = 12;
+    repeated Supply supplies = 13;
+    repeated SwapBorrowRateMode swap_borrow_rate_modes = 14;
+    repeated Upgraded upgradeds = 15;
+    repeated UserEModeSet user_e_mode_sets = 16;
+    repeated Withdraw withdraws = 17;
+}
+
+message BackUnbacked {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes reserve = 5;
+    bytes backer = 6;
+    string amount = 7;
+    string fee = 8;
+}
+
+message Borrow {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    string reserve = 5;
+    string user = 6;
+    string on_behalf_of = 7;
+    string amount = 8;
+    uint64 interest_rate_mode = 9;
+    string borrow_rate = 10;
+    uint64 referral_code = 11;
+}
+
+message FlashLoan {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    string target = 5;
+    string initiator = 6;
+    string asset = 7;
+    string amount = 8;
+    uint64 interest_rate_mode = 9;
+    string premium = 10;
+    uint64 referral_code = 11;
+}
+
+message IsolationModeTotalDebtUpdated {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes asset = 5;
+    string total_debt = 6;
+}
+
+message LiquidationCall {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    string collateral_asset = 5;
+    string debt_asset = 6;
+    string user = 7;
+    string debt_to_cover = 8;
+    string liquidated_collateral_amount = 9;
+    string liquidator = 10;
+    bool receive_a_token = 11;
+}
+
+message MintUnbacked {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes reserve = 5;
+    bytes user = 6;
+    bytes on_behalf_of = 7;
+    string amount = 8;
+    uint64 referral_code = 9;
+}
+
+message MintedToTreasury {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    string reserve = 5;
+    string amount_minted = 6;
+}
+
+message RebalanceStableBorrowRate {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes reserve = 5;
+    bytes user = 6;
+}
+
+message Repay {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    string reserve = 5;
+    string user = 6;
+    string repayer = 7;
+    string amount = 8;
+    bool use_a_tokens = 9;
+}
+
+message ReserveDataUpdated {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes reserve = 5;
+    string liquidity_rate = 6;
+    string stable_borrow_rate = 7;
+    string variable_borrow_rate = 8;
+    string liquidity_index = 9;
+    string variable_borrow_index = 10;
+}
+
+message ReserveUsedAsCollateralDisabled {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes reserve = 5;
+    bytes user = 6;
+}
+
+message ReserveUsedAsCollateralEnabled {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes reserve = 5;
+    bytes user = 6;
+}
+
+message Supply {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    string reserve = 5;
+    string user = 6;
+    string on_behalf_of = 7;
+    string amount = 8;
+    uint64 referral_code = 9;
+}
+
+message SwapBorrowRateMode {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes reserve = 5;
+    bytes user = 6;
+    uint64 interest_rate_mode = 7;
+}
+
+message Upgraded {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes implementation = 5;
+}
+
+message UserEModeSet {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    bytes user = 5;
+    uint64 category_id = 6;
+}
+
+message Withdraw {
+    string evt_tx_hash = 1;
+    uint32 evt_index = 2;
+    google.protobuf.Timestamp evt_block_time = 3;
+    uint64 evt_block_number = 4;
+    string reserve = 5;
+    string user = 6;
+    string to = 7;
+    string amount = 8;
+}

@@ -1,0 +1,185 @@
+type back_unbacked @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    amount: BigDecimal!
+    backer: String!
+    fee: BigDecimal!
+    reserve: String!
+}
+type borrow @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    amount: BigDecimal!
+    borrow_rate: BigDecimal!
+    interest_rate_mode: Int!
+    on_behalf_of: String!
+    referral_code: Int!
+    reserve: String!
+    user: String!
+}
+type flash_loan @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    amount: BigDecimal!
+    asset: String!
+    initiator: String!
+    interest_rate_mode: Int!
+    premium: BigDecimal!
+    referral_code: Int!
+    target: String!
+}
+type isolation_mode_total_debt_updated @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    asset: String!
+    total_debt: BigDecimal!
+}
+type liquidation_call @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    collateral_asset: String!
+    debt_asset: String!
+    debt_to_cover: BigDecimal!
+    liquidated_collateral_amount: BigDecimal!
+    liquidator: String!
+    receive_a_token: Boolean!
+    user: String!
+}
+type mint_unbacked @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    amount: BigDecimal!
+    on_behalf_of: String!
+    referral_code: Int!
+    reserve: String!
+    user: String!
+}
+type minted_to_treasury @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    amount_minted: BigDecimal!
+    reserve: String!
+}
+type rebalance_stable_borrow_rate @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    reserve: String!
+    user: String!
+}
+type repay @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    amount: BigDecimal!
+    repayer: String!
+    reserve: String!
+    use_a_tokens: Boolean!
+    user: String!
+}
+type reserve_data_updated @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    liquidity_index: BigDecimal!
+    liquidity_rate: BigDecimal!
+    reserve: String!
+    stable_borrow_rate: BigDecimal!
+    variable_borrow_index: BigDecimal!
+    variable_borrow_rate: BigDecimal!
+}
+type reserve_used_as_collateral_disabled @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    reserve: String!
+    user: String!
+}
+type reserve_used_as_collateral_enabled @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    reserve: String!
+    user: String!
+}
+type supply @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    amount: BigDecimal!
+    on_behalf_of: String!
+    referral_code: Int!
+    reserve: String!
+    user: String!
+}
+type swap_borrow_rate_mode @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    interest_rate_mode: Int!
+    reserve: String!
+    user: String!
+}
+type upgraded @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    implementation: String!
+}
+type user_e_mode_set @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    category_id: Int!
+    user: String!
+}
+type withdraw @entity {
+    id: ID!
+    evt_tx_hash: String!
+    evt_index: BigInt!
+    evt_block_time: String!
+    evt_block_number: BigInt!
+    amount: BigDecimal!
+    reserve: String!
+    to: String!
+    user: String!
+}
