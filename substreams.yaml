@@ -12,6 +12,7 @@ imports:
 protobuf:
   files:
     - contract.proto
+    - poolConfig.proto
   importPaths:
     - ./proto
 
@@ -28,6 +29,33 @@ modules:
       - source: sf.ethereum.type.v2.Block
     output:
       type: proto:contract.v1.Events
+
+  - name: map_reserve_initializations
+    kind: map
+    initialBlock: 16496792
+    inputs:
+      - source: sf.ethereum.type.v2.Block 
+    output:
+      type: proto:poolConfig.v1.ReserveInitializations
+
+  - name: store_tokens
+    kind: store
+    initialBlock: 16496792
+    updatePolicy: set
+    valueType: proto:poolConfig.v1.Token
+    inputs:
+      - map: map_reserve_initializations
+
+  - name: map_tokens
+    kind: map
+    initialBlock: 16496792
+    inputs:
+      - map: map_reserve_initializations
+      - store: store_tokens
+        mode: get
+    output:
+      type: proto:poolConfig.v1.Tokens 
+    
 
   - name: db_out
     kind: map

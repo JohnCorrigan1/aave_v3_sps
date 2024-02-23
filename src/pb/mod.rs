@@ -9,8 +9,14 @@ pub mod contract {
 pub mod google {
     // @@protoc_insertion_point(attribute:google.protobuf)
     pub mod protobuf {
-        // include!("google.protobuf.rs");
         // @@protoc_insertion_point(google.protobuf)
+    }
+}
+pub mod pool_config {
+    // @@protoc_insertion_point(attribute:poolConfig.v1)
+    pub mod v1 {
+        include!("poolConfig.v1.rs");
+        // @@protoc_insertion_point(poolConfig.v1)
     }
 }
 pub mod sf {
