@@ -1,4 +1,5 @@
 CARGO_VERSION := $(shell cargo version 2>/dev/null)
+START_BLOCK ?= 16496792
 
 .PHONY: build
 build:
@@ -11,7 +12,7 @@ endif
 
 .PHONY: run
 run: build
-	substreams run substreams.yaml map_tokens $(if $(START_BLOCK),-s $(START_BLOCK)) $(if $(STOP_BLOCK),-t $(STOP_BLOCK))
+	substreams run substreams.yaml graph_out $(if $(START_BLOCK),-s $(START_BLOCK)) $(if $(STOP_BLOCK),-t $(STOP_BLOCK))
 
 .PHONY: gui
 gui: build

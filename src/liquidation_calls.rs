@@ -1,8 +1,12 @@
+use std::str::FromStr;
+
 use crate::abi::{self};
 use crate::contract;
 use crate::eth::Block;
 use crate::pb;
 use crate::TRACKED_CONTRACT;
+use substreams::scalar::BigInt;
+use substreams::store::{StoreAdd, StoreAddBigInt, StoreNew};
 use substreams::Hex;
 use substreams_ethereum::Event;
 
@@ -41,4 +45,15 @@ pub fn get_liquidation_calls(
                 })
         })
         .collect())
+}
+
+#[substreams::handlers::store]
+pub fn store_liquidation_calls(events: contract::Events, s: StoreAddBigInt) {
+    for call in events.liquidation_calls {
+        s.add(
+            0,
+            &format!("{}:{}", call.user, call.collateral_asset),
+            BigInt::from_str(&call.liquidated_collateral_amount).unwrap_or(BigInt::zero()),
+        );
+    }
 }

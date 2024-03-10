@@ -24,7 +24,7 @@ binaries:
 modules:
   - name: map_events
     kind: map
-    initialBlock: 16496939
+    initialBlock: 16496792
     inputs:
       - source: sf.ethereum.type.v2.Block
     output:
@@ -55,21 +55,43 @@ modules:
         mode: get
     output:
       type: proto:poolConfig.v1.Tokens 
-    
 
-  - name: db_out
-    kind: map
-    initialBlock: 16496939
+  - name: store_liquidation_calls
+    kind: store
+    initialBlock: 16496792
+    updatePolicy: add 
+    valueType: bigint 
     inputs:
       - map: map_events
-    output:
-      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
+  
+  - name: store_borrows
+    kind: store
+    initialBlock: 16496792
+    updatePolicy: add 
+    valueType: bigint 
+    inputs:
+      - map: map_events
 
+  - name: store_supplies
+    kind: store
+    initialBlock: 16496792
+    updatePolicy: add 
+    valueType: bigint 
+    inputs:
+      - map: map_events
+    
   - name: graph_out
     kind: map
-    initialBlock: 16496939
+    initialBlock: 16496792
     inputs:
       - map: map_events
+      - map: map_tokens
+      - store: store_liquidation_calls
+        mode: get
+      - store: store_borrows
+        mode: get
+      - store: store_supplies
+        mode: get
     output:
       type: proto:sf.substreams.entity.v1.EntityChanges
 

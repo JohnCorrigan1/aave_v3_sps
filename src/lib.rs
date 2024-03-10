@@ -1,22 +1,23 @@
 mod abi;
-mod get_back_unbackeds;
-mod get_borrows;
-mod get_flash_loans;
-mod isolation_mode_total_debt_updateds;
-mod liquidation_calls;
-mod mint_unbackeds;
-mod minted_to_treasuries;
-mod pb;
-mod rebalance_stable_borrow_rates;
-mod repays;
-mod reserve_data_updateds;
-mod reserve_used_as_collateral_enableds;
-mod reserve_used_as_collerteral_disableds;
-mod supplies;
-mod swap_borrow_rate_modes;
-mod upgrades;
-mod user_e_mode_sets;
-mod withdraws;
+pub mod get_back_unbackeds;
+pub mod get_borrows;
+pub mod get_flash_loans;
+pub mod graph_out;
+pub mod isolation_mode_total_debt_updateds;
+pub mod liquidation_calls;
+pub mod mint_unbackeds;
+pub mod minted_to_treasuries;
+pub mod pb;
+pub mod rebalance_stable_borrow_rates;
+pub mod repays;
+pub mod reserve_data_updateds;
+pub mod reserve_used_as_collateral_enableds;
+pub mod reserve_used_as_collerteral_disableds;
+pub mod supplies;
+pub mod swap_borrow_rate_modes;
+pub mod upgrades;
+pub mod user_e_mode_sets;
+pub mod withdraws;
 use hex_literal::hex;
 use pb::{contract::v1 as contract, pool_config::v1 as poolConfig};
 use substreams::{
@@ -40,7 +41,7 @@ fn map_reserve_initializations(
 ) -> Result<poolConfig::ReserveInitializations, substreams::errors::Error> {
     let reserve_initializations: Vec<_> = blk
         .events::<abi::pool_config::events::ReserveInitialized>(&[&POOL_CONFIG_CONTRACT])
-        .map(|(event, log)| poolConfig::ReserveInitialization {
+        .map(|(event, _log)| poolConfig::ReserveInitialization {
             asset: Hex::encode(event.asset),
             a_token: Hex::encode(event.a_token),
             stable_debt_token: Hex::encode(event.stable_debt_token),
@@ -139,7 +140,7 @@ fn get_calls(address: String) -> Token {
 // fn get_decimals(address: String) -> substreams::scalar::BigInt {
 //     let decimals = eth_call(address);
 // }
-
+#[substreams::handlers::map]
 fn map_events(blk: eth::Block) -> Result<contract::Events, substreams::errors::Error> {
     Ok(contract::Events {
         back_unbackeds: get_back_unbackeds::get_back_unbackeds(&blk)?,

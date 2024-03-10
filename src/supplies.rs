@@ -3,7 +3,11 @@ use crate::contract;
 use crate::eth::Block;
 use crate::pb;
 use crate::TRACKED_CONTRACT;
-use substreams::Hex;
+use std::str::FromStr;
+use substreams::{
+    store::{StoreAdd, StoreAddBigInt, StoreNew},
+    Hex,
+};
 use substreams_ethereum::Event;
 
 pub fn get_supplies(
@@ -35,4 +39,36 @@ pub fn get_supplies(
                 })
         })
         .collect())
+}
+
+#[substreams::handlers::store]
+pub fn store_supplies(events: contract::Events, s: substreams::store::StoreAddBigInt) {
+    for supply in events.supplies {
+        s.add(
+            0,
+            supply.reserve,
+            substreams::scalar::BigInt::from_str(&supply.amount)
+                .unwrap_or(substreams::scalar::BigInt::zero()),
+        );
+    }
+
+    for withdrawl in events.withdraws {
+        s.add(
+            0,
+            withdrawl.reserve,
+            substreams::scalar::BigInt::from_str(&withdrawl.amount)
+                .unwrap_or(substreams::scalar::BigInt::zero())
+                * -1,
+        );
+    }
+
+    for liquidation in events.liquidation_calls {
+        s.add(
+            0,
+            &format!("{}:{}", liquidation.user, liquidation.collateral_asset),
+            substreams::scalar::BigInt::from_str(&liquidation.liquidated_collateral_amount)
+                .unwrap_or(substreams::scalar::BigInt::zero())
+                * -1,
+        );
+    }
 }

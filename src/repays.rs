@@ -3,6 +3,7 @@ use crate::contract;
 use crate::eth::Block;
 use crate::pb;
 use crate::TRACKED_CONTRACT;
+// use std::str::FromStr;
 use substreams::Hex;
 use substreams_ethereum::Event;
 
@@ -34,3 +35,15 @@ pub fn get_repays(blk: &Block) -> Result<Vec<pb::contract::v1::Repay>, substream
         })
         .collect())
 }
+
+// #[substreams::handlers::store]
+// pub fn store_repays(events: contract::Events, s: substreams::store::StoreAddBigInt) {
+//     for repay in events.repays {
+//         s.add(
+//             0,
+//             repay.reserve,
+//             substreams::scalar::BigInt::from_str(&repay.amount)
+//                 .unwrap_or(substreams::scalar::BigInt::zero()),
+//         );
+//     }
+// }

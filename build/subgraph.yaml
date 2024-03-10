@@ -1,9 +1,8 @@
 specVersion: 0.0.6
 description: aave-v-3-sps substreams based subgraph
-repository: # fill in with git remote url
+repository: null
 schema:
-  file: ./schema.graphql
-
+  file: schema.graphql
 dataSources:
   - kind: substreams
     name: aave-v3-sps
@@ -11,7 +10,7 @@ dataSources:
     source:
       package:
         moduleName: graph_out
-        file: aave-v3-sps-v0.1.0.spkg
+        file: aave-v3-sps/aave-v3-sps-v0.1.0.spkg
     mapping:
       kind: substreams/graph-entities
       apiVersion: 0.0.5

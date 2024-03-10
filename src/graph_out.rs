@@ -1,12 +1,34 @@
+use crate::pb::{contract::v1 as contract, pool_config::v1 as poolConfig};
+
 use std::str::FromStr;
-use substreams::scalar::BigDecimal;
+use substreams::scalar::{BigDecimal, BigInt};
+use substreams::store::{StoreGet, StoreGetBigInt};
 use substreams::Hex;
 use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_entity_change::tables::Tables as EntityChangesTables;
+
 #[substreams::handlers::map]
-fn graph_out(events: contract::Events) -> Result<EntityChanges, substreams::errors::Error> {
+pub fn graph_out(
+    events: contract::Events,
+    map_tokens: poolConfig::Tokens,
+    store_liquidations: StoreGetBigInt,
+    store_borrows: StoreGetBigInt,
+    store_supplies: StoreGetBigInt,
+) -> Result<EntityChanges, substreams::errors::Error> {
     // Initialize changes container
     let mut tables = EntityChangesTables::new();
+
+    map_tokens.tokens.into_iter().for_each(|token| {
+        tables
+            .update_row("Token", token.asset)
+            .set("name", token.name)
+            .set("symbol", token.symbol)
+            .set("decimals", token.decimals)
+            .set("a_token", token.a_token)
+            .set("a_name", token.a_name)
+            .set("a_symbol", token.a_symbol)
+            .set("a_decimals", token.a_decimals);
+    });
 
     // Loop over all the abis events to create changes
     events.back_unbackeds.into_iter().for_each(|evt| {
@@ -41,6 +63,13 @@ fn graph_out(events: contract::Events) -> Result<EntityChanges, substreams::erro
             .set("referral_code", evt.referral_code)
             .set("reserve", Hex(&evt.reserve).to_string())
             .set("user", Hex(&evt.user).to_string());
+
+        tables.update_row("Token", &evt.reserve).set(
+            "total_borrowed",
+            store_borrows
+                .get_at(0, &evt.reserve)
+                .unwrap_or(BigInt::zero()),
+        );
     });
     events.flash_loans.into_iter().for_each(|evt| {
         tables
@@ -99,6 +128,31 @@ fn graph_out(events: contract::Events) -> Result<EntityChanges, substreams::erro
             .set("liquidator", Hex(&evt.liquidator).to_string())
             .set("receive_a_token", evt.receive_a_token)
             .set("user", Hex(&evt.user).to_string());
+        tables
+            .update_row(
+                "TotalLiquidated",
+                &format!("{}:{}", evt.user, evt.collateral_asset),
+            )
+            .set(
+                "value",
+                store_liquidations
+                    .get_at(0, &format!("{}:{}", evt.user, evt.collateral_asset))
+                    .unwrap_or(BigInt::zero()),
+            );
+
+        tables.update_row("Token", &evt.debt_asset).set(
+            "total_borrowed",
+            store_borrows
+                .get_at(0, &evt.debt_asset)
+                .unwrap_or(BigInt::zero()),
+        );
+
+        tables.update_row("Token", &evt.collateral_asset).set(
+            "total_supplied",
+            store_supplies
+                .get_at(0, &evt.collateral_asset)
+                .unwrap_or(BigInt::zero()),
+        );
     });
     events.mint_unbackeds.into_iter().for_each(|evt| {
         tables
@@ -160,6 +214,13 @@ fn graph_out(events: contract::Events) -> Result<EntityChanges, substreams::erro
             .set("reserve", Hex(&evt.reserve).to_string())
             .set("use_a_tokens", evt.use_a_tokens)
             .set("user", Hex(&evt.user).to_string());
+
+        tables.update_row("Token", &evt.reserve).set(
+            "total_borrowed",
+            store_borrows
+                .get_at(0, &evt.reserve)
+                .unwrap_or(BigInt::zero()),
+        );
     });
     events.reserve_data_updateds.into_iter().for_each(|evt| {
         tables
@@ -237,6 +298,13 @@ fn graph_out(events: contract::Events) -> Result<EntityChanges, substreams::erro
             .set("referral_code", evt.referral_code)
             .set("reserve", Hex(&evt.reserve).to_string())
             .set("user", Hex(&evt.user).to_string());
+
+        tables.update_row("Token", &evt.reserve).set(
+            "total_supplied",
+            store_supplies
+                .get_at(0, &evt.reserve)
+                .unwrap_or(BigInt::zero()),
+        );
     });
     events.swap_borrow_rate_modes.into_iter().for_each(|evt| {
         tables
@@ -285,6 +353,13 @@ fn graph_out(events: contract::Events) -> Result<EntityChanges, substreams::erro
             .set("reserve", Hex(&evt.reserve).to_string())
             .set("to", Hex(&evt.to).to_string())
             .set("user", Hex(&evt.user).to_string());
+
+        tables.update_row("Token", &evt.reserve).set(
+            "total_supplied",
+            store_supplies
+                .get_at(0, &evt.reserve)
+                .unwrap_or(BigInt::zero()),
+        );
     });
 
     Ok(tables.to_entity_changes())
